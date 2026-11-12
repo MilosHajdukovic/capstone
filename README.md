@@ -1,11 +1,24 @@
-
 # Agentic Playwright Testing
 
-A brief description of the project, how and Why I made certain decisions
+This project demonstrates setting up a Playwright testing framework with MCP and Claude Code. The demo app used for testing is BookNow, a simple hotel-booking app. There are two versions of the app, `booknow-broken` with planted bugs and `booknow-fixed` without the known defects.
 
 ## Authors
 
 - [@MilosHajdukovic](https://github.com/MilosHajdukovic)
+
+## Running the apps
+
+Install dependencies:
+
+    npm install
+    npx playwright install chromium
+
+BookNow is plain static files (`index.html`, `app.js`, `style.css`) with no backend or build step, so any static server works. From the repo root:
+
+    npx serve booknow-broken     # app under test, http://localhost:3000
+    npx serve booknow-fixed      # corrected app, http://localhost:3000
+
+Both apps are served on port 3000, one at a time. `booknow-broken` is the app under test. `booknow-fixed` is used only to confirm that the tests pass once the bugs are fixed. Because both use the same URL, the same test suite runs against either app without any changes. Stop one server with `Ctrl+C` before starting the other.
 
 ## Credentials
 
@@ -22,7 +35,7 @@ This is a static practice app with no backend to protect, so these credentials a
 - `.gitignore` excludes `.env*` files, which can contain credentials and API keys. `.env.example` is still committed.
 - `.gitignore` excludes Playwright output that could expose sensitive data:
   - `/playwright/.auth/`: saved login sessions, including cookies and local storage
-  - `/test-results/`, `/playwright-report/` and `/blob-report/`: screenshots, videos or traces that can capture values entered during tests. 
+  - `/test-results/`, `/playwright-report/` and `/blob-report/`: screenshots, videos or traces that can capture values entered during tests.
 
 ## Playwright MCP
 
