@@ -6,9 +6,6 @@
 **Sprint Duration:** 2 weeks
 **Status:** Ready for QA
 
-> Capstone spec. Use it to verify the BookNow app the way you used TechShop's
-> requirements — check that every requirement is covered and flag every deviation
-> as a finding. The number and location of bugs are **not** disclosed.
 
 ---
 
@@ -83,6 +80,6 @@
 
 ## QA Resource
 
-- Tester: you (independent capstone)
+- Tester: Milos
 - Browser: Chrome latest
 - Environment: local, served with `npx serve`

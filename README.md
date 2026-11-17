@@ -2,9 +2,13 @@
 
 This project demonstrates setting up a Playwright testing framework with MCP and Claude Code. The demo app used for testing is BookNow, a simple hotel-booking app. There are two versions of the app, `booknow-broken` with planted bugs and `booknow-fixed` without the known defects.
 
-## Authors
+## How testing works in this project
 
-- [@MilosHajdukovic](https://github.com/MilosHajdukovic)
+Prompts are used to direct process. The initial exploration does not use any requirement document. When the exploration is done, it creates notes with the exploration results. After that, we use prompt again which uses exploration results and requirements where the second one is corrective, fills the gaps from the initial exploration and clarifies. 
+
+
+Agentic exploration -> Creating Notes -> Refinement using requirements -> Repeated Agentic exploration -> Test Creation -> Test Refinement
+
 
 ## Running the apps
 
@@ -52,3 +56,8 @@ To set it up on your machine, run the prompt in [`prompts/01-set-up-mcp.md`](pro
     npx playwright install chromium
 
 The MCP server writes page snapshots and screenshots to `.playwright-mcp/`, which is gitignored.
+
+
+## Authors
+
+- [@MilosHajdukovic](https://github.com/MilosHajdukovic)
