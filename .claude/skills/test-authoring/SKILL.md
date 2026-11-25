@@ -103,9 +103,21 @@ Maintain a clean, scalable directory and file structure:
 
 ---
 
-## 7. Strictly Prohibited Anti-Patterns
+## 7. Planned Regressions (Known Defects)
+
+Test cases flagged `Planned Regression` in `test-cases-draft-review.md` cover known bugs in `booknow-broken`.
+
+- **Assert the required behavior**: The expected result comes from `requirements.md`, never from what the broken app currently does.
+- **Expected to fail on booknow-broken**: A red result is the intended outcome and becomes a bug report. It should pass on `booknow-fixed`.
+- **Never hide the failure**: Do not use `test.fail()`, `test.skip()`, `test.fixme()` or `expect.soft()` on these tests, and do not loosen or delete an assertion to get a green run.
+- **Tag the test**: Put the TC ID and `@regression` in the title, e.g. `test('TC-BOOK-07 @regression rejects checkout before checkin', ...)`, so these tests can be run with `-g @regression`.
+
+---
+
+## 8. Strictly Prohibited Anti-Patterns
 
 1. ❌ **No arbitrary sleep calls**: `page.waitForTimeout(...)` or `setTimeout(...)` are strictly forbidden. Always rely on Playwright's built-in auto-waiting and web assertions (`toBeVisible()`, `toHaveText()`, etc.).
 2. ❌ **No hardcoded secrets**: All credentials must be sourced from environment variables.
 3. ❌ **No static/vacuous assertions**: Assertions must verify the dynamic consequence of the tested user action.
 4. ❌ **No brittle selector paths**: Structural CSS/XPath chains are banned.
+5. ❌ **No masking real defects**: Never skip, mark as expected-fail, or weaken an assertion to make a test that reveals a requirement deviation pass.
