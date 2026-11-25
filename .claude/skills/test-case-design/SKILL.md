@@ -5,7 +5,7 @@ description: Design BookNow test cases (positive, negative, edge) from requireme
 
 # Test Case Design Standard
 
-This document governs the design and generation of test cases in Antigravity. Whenever instructed to design test cases for a feature, follow this standard systematically.
+This document governs the design and generation of test cases in this project. Whenever instructed to design test cases for a feature, follow this standard systematically.
 
 ---
 
@@ -88,6 +88,15 @@ Any deviation, defect, or unexpected behavior documented in the feature's **Expl
 Before finalizing a test matrix, verify:
 - [ ] All three categories (Positive, Negative, Edge) are present for the feature.
 - [ ] Every title describes a specific behavior.
-- [ ] Steps and selectors align with the real DOM and locators in `exploration-notes.md`.
+- [ ] Steps and selectors align with the real DOM and locators in `qa-exploration-notes.md`.
 - [ ] All surprises and known defects from exploration notes are captured and tagged as planned regressions.
 - [ ] Assertions are deterministic and measurable.
+
+---
+
+## 6. Output
+
+- Save the matrix to `test-cases-draft-review.md` in the repo root, with one section per feature (e.g. `## Login`, `## Rooms`).
+- Put `Status: DRAFT` directly under each feature heading. Only the tester changes it to `Status: APPROVED`, one feature at a time.
+- If the file already exists, update it instead of creating a new one, and keep any manual edits by the tester.
+- After saving, show the matrix in chat for review.

@@ -4,10 +4,102 @@ This project demonstrates setting up a Playwright testing framework with MCP and
 
 ## How testing works in this project
 
-Prompts are used to direct process. The initial exploration does not use any requirement document. When the exploration is done, it creates notes with the exploration results. After that, we use prompt again which uses exploration results and requirements where the second one is corrective, fills the gaps from the initial exploration and clarifies. 
 
+Prompts are used to direct the process. The testing process has several phases:
+1. Agent-assisted exploration of the app
+2. Closing the coverage gap against requirements
+3. Test case design
+4. Implementing the test cases as Playwright specs
 
-Agentic exploration -> Creating Notes -> Refinement using requirements -> Repeated Agentic exploration -> Test Creation -> Test Refinement
+### Agent-assisted exploration of the app
+The initial exploration does not use any requirement document, but relies on checks conducted by agent. 
+When the exploration is done, agent outputs draft notes. It is on tester to decide whether the notes are correct and useful or not before saving them in `qa-exploration-notes.md`
+
+```mermaid
+flowchart TD
+    Start(["Start"])
+    S1[/"1. Tester instructs agent to explore app or app section"/]
+    S2["2. Playwright drives browser through MCP and collects data"]
+    S3[/"3. Agent outputs notes draft"/]
+    S4{"4. Is the tester satisfied with the notes?"}
+    S4a{"Significant errors in the notes draft?"}
+    S4b[/"Review the prompt and go to 1."/]
+    S4c[/"Correct notes by hand and go to 5."/]
+    S5[("5. Notes are saved in qa-exploration-notes.md")]
+    End(["End"])
+
+    Start --> S1 --> S2 --> S3 --> S4
+    S4 -- Yes --> S5
+    S4 -- No --> S4a
+    S4a -- Yes --> S4b --> S1
+    S4a -- No --> S4c --> S5
+    S5 --> End
+
+    classDef tester fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef agent fill:#E6F1FB,stroke:#185FA5,color:#042C53
+    classDef artifact fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A
+    class S1,S4b,S4c tester
+    class S2,S3 agent
+    class S5 artifact
+```
+
+### Closing the coverage gap against requirements
+
+```mermaid
+flowchart TD
+    Start(["Start"])
+    S6[/"6. Tester instructs agent to verify notes against requirements (documentation)"/]
+    S7[/"7. Agent reports coverage gaps"/]
+    S8{"8. Is the coverage gap closed?"}
+    S8a{"Significant part of requirements is not covered?"}
+    S8b[/"Review the prompt and re-run check 6."/]
+    S8c[/"Correct the notes by hand and go to 9."/]
+    S9[("9. Notes are saved in qa-exploration-notes.md")]
+    End(["End"])
+
+    Start --> S6 --> S7 --> S8
+    S8 -- Yes --> S9
+    S8 -- No --> S8a
+    S8a -- Yes --> S8b --> S6
+    S8a -- No --> S8c --> S9
+    S9 --> End
+
+    classDef tester fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef agent fill:#E6F1FB,stroke:#185FA5,color:#042C53
+    classDef artifact fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A
+    class S6,S8b,S8c tester
+    class S7 agent
+    class S9 artifact
+```
+
+### Test case design
+
+```mermaid
+flowchart TD
+    Start(["Start"])
+    S10[/"10. Tester instructs agent to create test cases draft based on notes + test case design skill"/]
+    S11[/"11. Agent outputs the test cases draft"/]
+    S12{"12. Is the tester satisfied with the test cases draft?"}
+    S12a{"Significant errors in test cases draft?"}
+    S12b[/"Review the test design skill and re-run check 10."/]
+    S12c[/"Correct test cases by hand and go to 13."/]
+    S13[("13. Test cases are reviewed and saved in test-cases-draft-review.md")]
+    End(["End"])
+
+    Start --> S10 --> S11 --> S12
+    S12 -- Yes --> S13
+    S12 -- No --> S12a
+    S12a -- Yes --> S12b --> S10
+    S12a -- No --> S12c --> S13
+    S13 --> End
+
+    classDef tester fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef agent fill:#E6F1FB,stroke:#185FA5,color:#042C53
+    classDef artifact fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A
+    class S10,S12b,S12c tester
+    class S11 agent
+    class S13 artifact
+```
 
 
 ## Running the apps
