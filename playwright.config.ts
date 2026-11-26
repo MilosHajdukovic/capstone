@@ -9,6 +9,25 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
+ * App under test. Each app gets its own port, so a server started by hand
+ * for one app can never be reused by a run that targets the other.
+ */
+const APP_PORTS = {
+  'booknow-broken': 3000,
+  'booknow-fixed': 3001,
+} as const;
+type BookNowApp = keyof typeof APP_PORTS;
+
+const app = process.env.BOOKNOW_APP ?? 'booknow-broken';
+if (!(app in APP_PORTS)) {
+  throw new Error(
+    `Invalid BOOKNOW_APP "${app}". Allowed values: ${Object.keys(APP_PORTS).join(', ')} (default: booknow-broken).`,
+  );
+}
+const port = APP_PORTS[app as BookNowApp];
+const baseURL = `http://localhost:${port}`;
+
+/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -26,7 +45,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -70,10 +89,11 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* Serve the selected app before starting the tests. --no-port-switching makes
+     serve fail loudly if the port is taken instead of moving to another port. */
+  webServer: {
+    command: `npx serve ${app} -l ${port} --no-port-switching`,
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+  },
 });

@@ -10,7 +10,7 @@ QA capstone: agentic Playwright testing of **BookNow**, a static hotel-booking a
 
 - `booknow-broken/`: the app under test, with seeded bugs.
 - `booknow-fixed/`: a corrected version of the same app (same structure and element IDs).
-- `tests/`: Playwright specs. Currently contains only the default `example.spec.ts`, which targets playwright.dev and not BookNow.
+- `tests/`: Playwright specs
 - `prompts/`: prompts used to generate and heal tests, kept for the portfolio. Claude Code does not read this folder.
 - `.claude/skills/<name>/SKILL.md`: project skills.
 
@@ -35,7 +35,7 @@ npx playwright test --headed / --ui / --debug
 npx playwright show-report
 ```
 
-`playwright.config.ts` currently has `baseURL` and `webServer` commented out. To make tests self-contained, set `webServer` to `npx serve booknow-broken` and `baseURL` to `http://localhost:3000`.
+`playwright.config.ts` picks the app with `BOOKNOW_APP` (default `booknow-broken`, or `booknow-fixed`). Each app has its own port (broken on 3000, fixed on 3001), and `webServer` runs `npx serve <app> -l <port> --no-port-switching`, so a reused server is always the right app. Run against the fixed app with `BOOKNOW_APP=booknow-fixed npx playwright test`.
 
 ## Conventions
 

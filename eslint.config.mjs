@@ -9,5 +9,15 @@ export default tseslint.config(
   {
     files: ['tests/**/*.ts'],
     ...playwright.configs['flat/recommended'],
+    rules: {
+      ...playwright.configs['flat/recommended'].rules,
+      // Assertion helpers shared inside spec files count as assertions.
+      'playwright/expect-expect': [
+        'warn',
+        { assertFunctionNames: ['expectLoginRejected', 'expectBookingRejected', 'expectAllRequiredErrors'] },
+      ],
+      // Fixtures requested only for their setup (e.g. `authenticatedPage: _`) are named with a leading _.
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
   },
 );
