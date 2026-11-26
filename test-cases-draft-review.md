@@ -7,7 +7,8 @@ Sources: `requirements.md` (source of truth) and `qa-exploration-notes.md` (expl
 
 - **Requirement tags** use the IDs from the Requirements Coverage section of `qa-exploration-notes.md` (L1–L9, R1–R5, B1–B11, C1–C4). `NO REQUIREMENT` means no line of `requirements.md` covers the behavior.
 - **OPEN QUESTION** means the requirement is ambiguous or silent. The Expected Result gives a *proposed* outcome that needs product-owner confirmation before the case is automated.
-- **Planned Regression** cases assert what the spec requires. They are expected to **fail** on `booknow-broken` and pass on `booknow-fixed`.
+- **Planned Regression** cases assert what the spec requires. They are expected to **fail** on `booknow-broken` and pass on `booknow-fixed`. Automated with the `@regression` tag.
+- **Open Question** flag (`@open-question` tag): the expected result is a proposed answer to an OPEN QUESTION, or no line of `requirements.md` covers the case. These tests may fail on both builds. They become Planned Regressions once the product owner confirms the answer.
 - All pages share the URL `http://localhost:3000/`. Assert on visible sections and headings, never on the URL, and never use `page.goBack()` to move inside the app.
 - Shared preconditions referenced below:
   - **Fresh page:** open `http://localhost:3000/`; `#page-login` is visible; not logged in.
@@ -21,7 +22,7 @@ Sources: `requirements.md` (source of truth) and `qa-exploration-notes.md` (expl
 
 ## Login
 
-Status: DRAFT
+Status: APPROVED
 
 #### [TC-LOGIN-01] Valid credentials sign in and open the Available Rooms page
 - **Category:** Positive
@@ -137,7 +138,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** L2 — **OPEN QUESTION**
 - **Open Question:** L2 says "contains @ and a domain". Does `guest@booknow` (no TLD) count as having a domain?
-- **Regression Flag:** Planned Regression: Login S6 — `guest@booknow` logs in (applies only if the answer is "TLD required")
+- **Regression Flag:** Open Question (`@open-question`): Login S6 — `guest@booknow` logs in (a deviation only if the answer is "TLD required")
 - **Preconditions:** Fresh page.
 - **Steps:**
   1. Fill **Email Address** with `guest@booknow` and **Password** with `process.env.BOOKNOW_PASSWORD`.
@@ -148,7 +149,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** L5 — **OPEN QUESTION**
 - **Open Question:** Is the email match case-insensitive? Spec gives only `guest@booknow.com`.
-- **Regression Flag:** None (current behavior: logs in; correct behavior unknown)
+- **Regression Flag:** Open Question (`@open-question`): no proposed answer (current behavior: logs in; correct behavior unknown). Automated to check that exactly one outcome (logged in, or the login error) is shown
 - **Preconditions:** Fresh page.
 - **Steps:**
   1. Fill **Email Address** with `GUEST@BOOKNOW.COM` and **Password** with `process.env.BOOKNOW_PASSWORD`.
@@ -159,7 +160,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** L5 — **OPEN QUESTION**
 - **Open Question:** Should leading/trailing whitespace be trimmed from the email?
-- **Regression Flag:** None (current behavior: logs in; correct behavior unknown)
+- **Regression Flag:** Open Question (`@open-question`): no proposed answer (current behavior: logs in; correct behavior unknown). Automated to check that exactly one outcome (logged in, or the login error) is shown
 - **Preconditions:** Fresh page.
 - **Steps:**
   1. Fill **Email Address** with ` guest@booknow.com ` (one leading and one trailing space) and **Password** with `process.env.BOOKNOW_PASSWORD`.
@@ -170,7 +171,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** L4 — **OPEN QUESTION**
 - **Open Question:** Does "empty" include whitespace-only values? (Not explored at login; inferred from Login S2.)
-- **Regression Flag:** Planned Regression: Login S2 — no empty-field check exists (applies if whitespace counts as empty)
+- **Regression Flag:** Open Question (`@open-question`): Login S2 — no empty-field check exists (a deviation if whitespace counts as empty)
 - **Preconditions:** Fresh page.
 - **Steps:**
   1. Fill **Email Address** with `   ` and **Password** with `   `.
@@ -232,7 +233,7 @@ Status: DRAFT
 
 ## Rooms
 
-Status: DRAFT
+Status: APPROVED
 
 #### [TC-ROOMS-01] Available Rooms page shows a grid of room cards after login
 - **Category:** Positive
@@ -342,7 +343,7 @@ Status: DRAFT
 - **Category:** Positive
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** The spec lists an availability badge but not its styling. Confirm that an "Available" badge must use the available (green) style.
-- **Regression Flag:** Planned Regression: Rooms S4 — all "Available" badges use `badge-unavailable` (red)
+- **Regression Flag:** Open Question (`@open-question`): Rooms S4 — all "Available" badges use `badge-unavailable` (red); styling is not in the spec
 - **Preconditions:** Logged in.
 - **Steps:**
   1. For each card, read `card(name).locator('.availability-badge')`.
@@ -351,7 +352,7 @@ Status: DRAFT
 #### [TC-ROOMS-13] Room images have descriptive alt text
 - **Category:** Positive
 - **Requirement:** NO REQUIREMENT (accessibility not specified)
-- **Regression Flag:** Planned Regression: Rooms S3 (Deluxe has no `alt`) and Rooms S6 (Family Suite `alt=""`)
+- **Regression Flag:** Open Question (`@open-question`): Rooms S3 (Deluxe has no `alt`) and Rooms S6 (Family Suite `alt=""`); accessibility is not in the spec
 - **Preconditions:** Logged in.
 - **Steps:**
   1. For each card, query `card(name).getByRole('img', { name })`.
@@ -360,7 +361,7 @@ Status: DRAFT
 #### [TC-ROOMS-14] Nav "Rooms" link and logo are keyboard-reachable links
 - **Category:** Positive
 - **Requirement:** NO REQUIREMENT (accessibility not specified)
-- **Regression Flag:** Planned Regression: Rooms S7 / Confirmation S8 — `<a>` without `href` and clickable `div`
+- **Regression Flag:** Open Question (`@open-question`): Rooms S7 / Confirmation S8 — `<a>` without `href` and clickable `div`; accessibility is not in the spec. Also fails on `booknow-fixed`
 - **Preconditions:** Logged in.
 - **Steps:**
   1. Query `getByRole('navigation').getByRole('link', { name: 'Rooms' })`.
@@ -380,7 +381,7 @@ Status: DRAFT
 
 ## Booking Form
 
-Status: DRAFT
+Status: APPROVED
 
 #### [TC-BOOK-01] Selecting a room opens the booking form with all guest and stay fields
 - **Category:** Positive
@@ -445,7 +446,7 @@ Status: DRAFT
 - **Preconditions:** On booking form for Deluxe Room; all fields empty (clear `#book-guests` too).
 - **Steps:**
   1. Click **Book Now**.
-- **Expected Result:** "Complete Your Booking" heading still visible; "Booking Confirmed!" not visible; visible errors: `#err-fname` "First name is required", `#err-lname` "Last name is required", `#err-email` "Valid email is required", `#err-phone` "Phone number is required", `#err-checkin` "Check-in date is required", `#err-checkout` "Check-out date is required", `#err-guests` "At least 1 guest is required".
+- **Expected Result:** "Complete Your Booking" heading still visible; "Booking Confirmed!" not visible; visible errors: `#err-fname` "First name is required", `#err-lname` "Last name is required", `#err-email` "Valid email is required", `#err-phone` "Phone number is required (digits only)", `#err-checkin` "Check-in date is required", `#err-checkout` "Check-out date must be after check-in", `#err-guests` "At least 1 guest is required".
 
 #### [TC-BOOK-08] Each blank required field is rejected with its own error
 - **Category:** Negative
@@ -521,7 +522,7 @@ Status: DRAFT
 - **Category:** Negative
 - **Requirement:** B1 — **OPEN QUESTION**
 - **Open Question:** B1 says the form is "reached by selecting a room" but not what happens if it is reached otherwise. Should the form be refused, or should submit be blocked? Also: the logged-in variant was not explored (S12 was seen without login).
-- **Regression Flag:** Planned Regression: Booking S12 — Book Now confirms with `selectedRoom = null`
+- **Regression Flag:** Open Question (`@open-question`): Booking S12 — Book Now confirms with `selectedRoom = null`. On `booknow-fixed` it throws a JS error and shows no refusal
 - **Preconditions:** Logged in (no room selected).
 - **Steps:**
   1. Run `page.evaluate(() => showPage('booking'))`.
@@ -571,7 +572,7 @@ Status: DRAFT
 #### [TC-BOOK-20] Phone length boundary: 7 characters accepted, 6 rejected
 - **Category:** Edge
 - **Requirement:** B6
-- **Regression Flag:** Planned Regression: Booking S6 — short phones accepted (explored with `12345`; the 6/7 boundary is not explored)
+- **Regression Flag:** Planned Regression (row B only): Booking S6 — short phones accepted (explored with `12345`; the 6/7 boundary is not explored). Row A (7 characters accepted) passes on both builds, so it is not tagged `@regression`. Row B also covers TC-BOOK-11
 - **Preconditions:** On booking form for Deluxe Room with valid booking data (fresh login per row).
 - **Steps:**
   1. Row A: fill `#book-phone` with `1234567`, click **Book Now**.
@@ -602,7 +603,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** B4 — **OPEN QUESTION**
 - **Open Question:** Does "required" treat whitespace-only values as empty?
-- **Regression Flag:** Planned Regression: Booking S7 — `"   "` names accepted (applies if whitespace counts as empty)
+- **Regression Flag:** Open Question (`@open-question`): Booking S7 — `"   "` names accepted (a deviation if whitespace counts as empty)
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-fname` and `#book-lname` with `   `.
@@ -613,7 +614,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** B5 — **OPEN QUESTION**
 - **Open Question:** B5 says only "valid format". Is `john@example` (no TLD) valid?
-- **Regression Flag:** Planned Regression: Booking S5 — `john@example` accepted (applies if TLD required)
+- **Regression Flag:** Open Question (`@open-question`): Booking S5 — `john@example` accepted (a deviation if a TLD is required)
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-email` with `john@example`.
@@ -624,7 +625,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** B8 — **OPEN QUESTION**
 - **Open Question:** B8 sets only a minimum. Must guests be a whole number?
-- **Regression Flag:** Planned Regression: Booking S4 — `1.5` accepted (applies if whole numbers required)
+- **Regression Flag:** Open Question (`@open-question`): Booking S4 — `1.5` accepted (a deviation if whole numbers are required). Also accepted on `booknow-fixed`
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-guests` with `1.5`.
@@ -645,7 +646,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** B10 — **OPEN QUESTION**
 - **Open Question:** What should Nights and Estimated Total show before both dates are set (empty, "—", 0)?
-- **Regression Flag:** Planned Regression: Booking S10 — Nights = 1 and a one-night total shown with no dates
+- **Regression Flag:** Open Question (`@open-question`): Booking S10 — Nights = 1 and a one-night total shown with no dates. Same on `booknow-fixed`
 - **Preconditions:** On booking form for Deluxe Room; dates untouched.
 - **Steps:**
   1. Read `#summary-nights` and `#summary-total`.
@@ -654,7 +655,7 @@ Status: DRAFT
 #### [TC-BOOK-28] Double-clicking Book Now with valid data shows the confirmation once
 - **Category:** Edge
 - **Requirement:** C1
-- **Regression Flag:** None (not explored)
+- **Regression Flag:** Planned Regression: Confirmation S1 — `#confirm-ref` doesn't exist in the broken build, so the one-reference check fails (the double-submit itself was not explored)
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Double-click `getByRole('button', { name: 'Book Now' })`.
@@ -664,7 +665,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** The spec sets no maximum lengths. What are the limits for names, email and phone?
-- **Regression Flag:** None until limits are defined (Booking S5, S6, S7 observed all accepted; no `maxlength`)
+- **Regression Flag:** Open Question (`@open-question`): no proposed answer until limits are defined (Booking S5, S6, S7 observed all accepted; no `maxlength`). Automated to check that exactly one outcome (confirmed, or a field error) is shown
 - **Preconditions:** On booking form for Deluxe Room with valid booking data (fresh login per row).
 - **Steps:**
   1. Row A: fill `#book-fname` and `#book-lname` with 500 characters each.
@@ -677,7 +678,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Are names like `12345` acceptable?
-- **Regression Flag:** None (Booking S7: accepted; breaks nothing in the spec)
+- **Regression Flag:** Open Question (`@open-question`): no proposed answer (Booking S7: accepted; breaks nothing in the spec). Automated to check that exactly one outcome is shown
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-fname` and `#book-lname` with `12345`.
@@ -688,7 +689,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Can a stay be booked in the past?
-- **Regression Flag:** None until answered (Booking S8: `2025-01-01` → `2025-01-03` accepted)
+- **Regression Flag:** Open Question (`@open-question`): Booking S8 — past dates accepted (`2025-01-01` → `2025-01-03`). Also accepted on `booknow-fixed`
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-checkin` `2025-01-01` and `#book-checkout` `2025-01-03`.
@@ -699,7 +700,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Is there a maximum guest count or room capacity?
-- **Regression Flag:** None (Booking S4: `99` accepted)
+- **Regression Flag:** Open Question (`@open-question`): no proposed answer (Booking S4: `99` accepted). Automated to check that exactly one outcome is shown
 - **Preconditions:** On booking form for Deluxe Room with valid booking data.
 - **Steps:**
   1. Fill `#book-guests` with `99`.
@@ -709,7 +710,7 @@ Status: DRAFT
 #### [TC-BOOK-33] Booking form fields are named by their visible labels
 - **Category:** Positive
 - **Requirement:** NO REQUIREMENT (accessibility not specified)
-- **Regression Flag:** Planned Regression: Booking S9 — labels have no `for`, date inputs and guests are unnamed
+- **Regression Flag:** Open Question (`@open-question`): Booking S9 — labels have no `for`, date inputs and guests are unnamed; accessibility is not in the spec. Also fails on `booknow-fixed`
 - **Preconditions:** On booking form for Deluxe Room.
 - **Steps:**
   1. For each label text (First Name, Last Name, Email Address, Phone Number, Check-in Date, Check-out Date, Number of Guests), query `page.getByLabel(text)`.
@@ -772,7 +773,7 @@ Status: DRAFT
 
 ## Confirmation
 
-Status: DRAFT
+Status: APPROVED
 
 #### [TC-CONF-01] Valid booking shows the confirmation page
 - **Category:** Positive
@@ -864,7 +865,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Should the booking form reset after a confirmed booking?
-- **Regression Flag:** Planned Regression: Confirmation S6 — all 7 fields keep the previous booking's values
+- **Regression Flag:** Open Question (`@open-question`): Confirmation S6 — all 7 fields keep the previous booking's values. Same on `booknow-fixed`
 - **Preconditions:** On the confirmation page after a valid booking.
 - **Steps:**
   1. Click **Browse More Rooms**, then Select Room on Penthouse Suite.
@@ -874,7 +875,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Should in-app navigation create history entries?
-- **Regression Flag:** Planned Regression: Confirmation S5 — Back goes to `about:blank`
+- **Regression Flag:** Open Question (`@open-question`): Confirmation S5 — Back goes to `about:blank`. Same on `booknow-fixed`
 - **Preconditions:** On the confirmation page after a valid booking.
 - **Steps:**
   1. Call `page.goBack()` (this case deliberately tests Back).
@@ -894,7 +895,7 @@ Status: DRAFT
 - **Category:** Edge
 - **Requirement:** NO REQUIREMENT — **OPEN QUESTION**
 - **Open Question:** Email notifications are out of scope, but both builds mention email in the subtitle. Should the copy change?
-- **Regression Flag:** None until answered (Confirmation S9; `booknow-fixed` also mentions email)
+- **Regression Flag:** Open Question (`@open-question`): Confirmation S9 — the subtitle mentions email; `booknow-fixed` also mentions email
 - **Preconditions:** On the confirmation page after a valid booking.
 - **Steps:**
   1. Read `#page-confirm .confirm-subtitle`.
@@ -1034,6 +1035,6 @@ Review of the draft against `requirements.md`, `qa-exploration-notes.md` and the
 ### Flagged: cross-cutting risks
 
 - **Hard-coded dates will soon be in the past.** The shared valid data uses `2026-12-01`, six days from today. If the BOOK-31 open question ends in "past dates are rejected", every case using valid booking data will start failing after 2026-12-01. Build dates relative to today in the fixture.
-- **Spec questions with `Regression Flag: None`** (LOGIN-13, LOGIN-14, BOOK-29, 30, 32, CONF-12, CONF-13). Skill §4 says every documented deviation gets a Planned Regression flag. These are spec questions rather than defects, so `None` is defensible, but update the flag once each question is answered.
+- **Spec questions with `Regression Flag: None`** (LOGIN-13, LOGIN-14, BOOK-29, 30, 32, CONF-12, CONF-13). Skill §4 says every documented deviation gets a Planned Regression flag. These are spec questions rather than defects, so `None` is defensible, but update the flag once each question is answered. **Resolved:** these cases (except CONF-12, which is not automated) and every case with a proposed open-question answer are now flagged Open Question (`@open-question`).
 - **Format deviation:** every case adds a `Requirement:` line, and open-question cases add an `Open Question:` line. Neither field is in the skill schema; both were requested in the original design prompt. Update the skill if they should stay.
 - **Implementation coupling:** TC-LOGIN-19 reads the `isLoggedIn` global. It will break if the variable is renamed.

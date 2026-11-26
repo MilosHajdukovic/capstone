@@ -111,6 +111,7 @@ Test cases flagged `Planned Regression` in `test-cases-draft-review.md` cover kn
 - **Expected to fail on booknow-broken**: A red result is the intended outcome and becomes a bug report. It should pass on `booknow-fixed`.
 - **Never hide the failure**: Do not use `test.fail()`, `test.skip()`, `test.fixme()` or `expect.soft()` on these tests, and do not loosen or delete an assertion to get a green run.
 - **Tag the test**: Put the TC ID and `@regression` in the title, e.g. `test('TC-BOOK-07 @regression rejects checkout before checkin', ...)`, so these tests can be run with `-g @regression`.
+- **Open questions get `@open-question`, not `@regression`**: When the expected result is a proposed answer to an OPEN QUESTION, or the case has no requirement in `requirements.md`, tag it `@open-question` (e.g. `test('TC-BOOK-25 @open-question rejects a fractional number of guests', ...)`) and mark the proposed assertion with a `// OPEN QUESTION: ...` comment. The same no-hiding rules apply. Keep `@regression` for cases whose expected result comes from `requirements.md`, so `-g @regression` reports only requirement defects. Retag to `@regression` once the product owner confirms the answer.
 
 ---
 
